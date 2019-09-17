@@ -1,0 +1,7 @@
+# If you want some example snippets, check out:
+# https://github.com/atom/language-javascript/blob/master/snippets/javascript.cson
+
+'.source.6502-kickass':
+  'Subroutine':
+    'prefix': 'sub'
+    'body': '$1 SUBROUTINE\n\t$2\n\trts\n'

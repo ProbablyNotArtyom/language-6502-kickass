@@ -1,0 +1,113 @@
+'scopeName': 'source.kickass'
+'name': 'Kick Assembler'
+
+'fileTypes': [
+	's'
+	'asm'
+	'a'
+	'S'
+]
+limitLineLength: false
+patterns: [
+	{ include: 'source.65c02-opcodes' }
+    { include: 'source.6502x-opcodes' }
+	{ include: '#directives' }
+
+]
+
+repository:
+	directives:
+		patterns: [
+			{
+				'match': '(;|(#^[0-9])|/(/|\\B\\*)|\\B\\*).*$'
+				'name': 'comment.kickass'
+			}
+			{
+				'name': 'string.quoted.kickass'
+				'begin': '"'
+				'end': '"'
+			}
+			{
+				'name': 'entity.name.function.kickass'
+				'match': '^[a-zA-Z_][a-zA-Z0-9_]*:'
+			}
+			{
+				'match': '(\\#)((?:define|undef))([\\s\\w]+)\\b'
+				'captures':
+					1: 'name': 'keyword.control.directive.kickass'
+					2: 'name': 'keyword.control.directive.kickass'
+					3: 'name': 'keyword.control.directive.kickass'
+					4: 'name': 'constant.vaiable.kickass'
+			}
+			{
+				'match': '(\\#)((?:endif|el(se|if)|if|import(if|once)?|))\\b'
+				'captures':
+					1: 'name': 'keyword.control.directive.kickass'
+					2: 'name': 'keyword.control.directive.kickass'
+			}
+			{
+				'match': '(\\.)((?:return|namespace|print(now)?|by(te)?|align|assert(error)?|break|disk|dw(ord)?|encoding|enum|error(if)?|file(modify|namespace)?|fill(word)?|for|lohifill|memblock|modify|pc|plugin|pseudopc|segment(def|out)?|struct|te(xt)?|while|wo(rd)?|zp|import( binary| c64| source| text|once)))\\b'
+				'captures':
+					1: 'name': 'keyword.control.directive.kickass'
+					2: 'name': 'keyword.control.directive.kickass'
+					3: 'name': 'keyword.control.directive.kickass'
+					4: 'name': 'keyword.control.directive.kickass'
+			}
+			{
+				'match': '(\\.)(var|eval|const|label)(\\s*[a-zA-Z0-9_]*)(\\s*=)'
+				'captures':
+					1: 'name': 'keyword.control.directive.kickass'
+					2: 'name': 'keyword.control.directive.kickass'
+					3: 'name': 'support.function.kickass'
+					4: 'name': 'keyword.operator.kickass'
+			}
+			{
+				'match': '(\\.)(function|macro|pseudocommand)([\\s\\w_.]*)(\\()([^)]*)(\\))'
+				'captures':
+					1: 'name': 'keyword.control.directive.kickass'
+					2: 'name': 'keyword.control.directive.kickass'
+					3: 'name': 'entity.name.function.kickass'
+					4: 'name': 'keyword.operator.kickass'
+					5: 'name': 'constant.variable.kickass'
+					6: 'name': 'keyword.operator.kickass'
+			}
+			{
+				'match': "\\'\\S\\'"
+				'name': 'string.char.kickass'
+			}
+			# absolut address/number
+			{
+				'match': '\\#(\'.\'|[^\\s\']+)'
+				'name': 'constant.numeric.hex.kickass'
+			}
+			# hex, prefixed with ampersand($)
+			{
+				'match': '-?\\$[A-Fa-f0-9]+'
+				'name': 'constant.numeric.hex.kickass'
+			}
+			# octal, prefixed with @
+			{
+				'match': '@([0-7]+)\\b'
+				'name': 'constant.numeric.octal.merlin'
+			}
+			# binary
+			{
+				'match': '%[01]+'
+				'name': 'constant.numeric.binary.merlin'
+			}
+			# decimal
+			{
+				'match': '\\b([0-9]+)\\b'
+				'name': 'constant.numeric.decimal.merlin'
+			}
+			# ops
+			{
+				'match': '[-+/*^><|#\\[\\](),=.!&]'
+				'name': 'keyword.operator.kickass'
+			}
+			# const symbol
+			{
+				'match': '\\b([_A-Z][_A-Za-z0-90]+)\\b'
+				'name': 'variable.kickass'
+			}
+		]

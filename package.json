@@ -1,0 +1,20 @@
+{
+  "name": "language-6502-kickass",
+  "version": "0.0.0",
+  "description": "Language support for 6502 assembly via Kick Assemblers",
+  "keywords": [
+    "language",
+    "grammar"
+  ],
+  "repository": "https://github.com/ProbablyNotArtyom/language-6502-kickass",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "extensions": {
+      ".json": [
+        "coffeelint.json",
+        "package.json"
+      ]
+  }
+}
