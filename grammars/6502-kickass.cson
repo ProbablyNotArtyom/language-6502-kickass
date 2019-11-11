@@ -67,7 +67,7 @@ repository:
 			{
 				'match': '(\\}?(\\s+)?)(else)'
 				'captures':
-					2: 'name': 'keyword.control.directive.kickass'
+					3: 'name': 'keyword.control.directive.kickass'
 			}
 			# ===============================================================
 
