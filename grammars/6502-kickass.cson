@@ -4,9 +4,10 @@
 'fileTypes': [
 	's'
 	'asm'
-	'a'
 	'S'
+	'inc'
 ]
+
 limitLineLength: false
 patterns: [
 	{ include: 'source.65c02-opcodes' }
@@ -19,7 +20,7 @@ repository:
 	directives:
 		patterns: [
 			{
-				'match': '(;|(#^[0-9])|/(/|\\B\\*)|\\B\\*).*$'
+				'match': '(\\/\\*(\\*(?!\\/)|[^*])*\\*\\/|\\/\\/[^\\n]+)'
 				'name': 'comment.kickass'
 			}
 			{
@@ -27,12 +28,15 @@ repository:
 				'begin': '"'
 				'end': '"'
 			}
-			{
+			{	# Labels
 				'name': 'entity.name.function.kickass'
 				'match': '^[a-zA-Z_][a-zA-Z0-9_]*:'
 			}
+
+			# ===============================================================
+			# Preprocessor directives
 			{
-				'match': '(\\#)((?:define|undef))([\\s\\w]+)\\b'
+				'match': '(\\#)((?:define|undef))([\\s\\w]+)'
 				'captures':
 					1: 'name': 'keyword.control.directive.kickass'
 					2: 'name': 'keyword.control.directive.kickass'
@@ -40,19 +44,48 @@ repository:
 					4: 'name': 'constant.vaiable.kickass'
 			}
 			{
-				'match': '(\\#)((?:endif|el(se|if)|if|import(if|once)?|))\\b'
+				'match': '(\\#)((?:endif|el(se|if)|if|importif))([\\s\\w]+)'
+				'captures':
+					1: 'name': 'keyword.control.directive.kickass'
+					2: 'name': 'keyword.control.directive.kickass'
+					3: 'name': 'constant.vaiable.kickass'
+			}
+			{
+				'match': '(\\#)((import(once)?))([\\s\\w]+)'
+				'name': 'keyword.control.directive.kickass'
+			}
+			# ===============================================================
+
+			# ===============================================================
+			# Assembler directive conditionals
+			{
+				'match': '(\\.)((?:elif|if))'
 				'captures':
 					1: 'name': 'keyword.control.directive.kickass'
 					2: 'name': 'keyword.control.directive.kickass'
 			}
 			{
-				'match': '(\\.)((?:return|namespace|print(now)?|by(te)?|align|assert(error)?|break|disk|dw(ord)?|encoding|enum|error(if)?|file(modify|namespace)?|fill(word)?|for|lohifill|memblock|modify|pc|plugin|pseudopc|segment(def|out)?|struct|te(xt)?|while|wo(rd)?|zp|import( binary| c64| source| text|once)))\\b'
+				'match': '(\\}?(\\s+)?)(else)'
 				'captures':
-					1: 'name': 'keyword.control.directive.kickass'
 					2: 'name': 'keyword.control.directive.kickass'
-					3: 'name': 'keyword.control.directive.kickass'
-					4: 'name': 'keyword.control.directive.kickass'
 			}
+			# ===============================================================
+
+			# ===============================================================
+			# Assembler directives misc
+			{	# Assembler directives that have inconsistant syntax
+				'match': '(\\.)((?:return|namespace|print(now)?|by(te)?|align|assert(error)?|break|disk|dw(ord)?|encoding|enum|error(if)?|file(modify|namespace)?|fill(word)?|for|lohifill|memblock|modify|pc|plugin|pseudopc|segment(def|out)?|struct|te(xt)?|while|wo(rd)?|zp|import( binary| c64| source| text|once)))\\b'
+				'name': 'keyword.control.directive.kickass'
+			}
+			{
+				'match': '(\\}?(\\s+)?)(else)'
+				'captures':
+					2: 'name': 'keyword.control.directive.kickass'
+			}
+			# ===============================================================
+
+			# ===============================================================
+			# Variables and Macros
 			{
 				'match': '(\\.)(var|eval|const|label)(\\s*[a-zA-Z0-9_]*)(\\s*=)'
 				'captures':
@@ -62,7 +95,7 @@ repository:
 					4: 'name': 'keyword.operator.kickass'
 			}
 			{
-				'match': '(\\.)(function|macro|pseudocommand)([\\s\\w_.]*)(\\()([^)]*)(\\))'
+				'match': '(\\.)(function|macro)([\\s\\w_.]*)(\\()([^)]*)(\\))'
 				'captures':
 					1: 'name': 'keyword.control.directive.kickass'
 					2: 'name': 'keyword.control.directive.kickass'
@@ -72,42 +105,58 @@ repository:
 					6: 'name': 'keyword.operator.kickass'
 			}
 			{
+				'match': '(\\.)(pseudocommand)(\\s+)([^\\s\\n]+)'
+				'captures':
+					1: 'name': 'keyword.control.directive.kickass'
+					2: 'name': 'keyword.control.directive.kickass'
+					4: 'name': 'entity.name.function.kickass'
+			}
+			{	# Variable functions, like var.getValue()
+				'match': '(\\w+(?=\\())'
+				'name': 'entity.name.function.kickass'
+			}
+			# ===============================================================
+
+			# ===============================================================
+			# Data types
+			{	# Strings
 				'match': "\\'\\S\\'"
 				'name': 'string.char.kickass'
 			}
-			# absolut address/number
-			{
+
+			{	# Immediate values
 				'match': '\\#(\'.\'|[^\\s\']+)'
 				'name': 'constant.numeric.hex.kickass'
 			}
-			# hex, prefixed with ampersand($)
-			{
+
+			{	# Hex numbers
 				'match': '-?\\$[A-Fa-f0-9]+'
 				'name': 'constant.numeric.hex.kickass'
 			}
-			# octal, prefixed with @
-			{
+
+			{	# Octals
 				'match': '@([0-7]+)\\b'
 				'name': 'constant.numeric.octal.merlin'
 			}
-			# binary
-			{
+
+			{	# Binary numbers
 				'match': '%[01]+'
 				'name': 'constant.numeric.binary.merlin'
 			}
-			# decimal
-			{
+
+			{	# Decimal numbers
 				'match': '\\b([0-9]+)\\b'
 				'name': 'constant.numeric.decimal.merlin'
 			}
-			# ops
-			{
+
+			{	# Operators
 				'match': '[-+/*^><|#\\[\\](),=.!&]'
 				'name': 'keyword.operator.kickass'
 			}
-			# const symbol
-			{
-				'match': '\\b([_A-Z][_A-Za-z0-90]+)\\b'
+
+			{	# Constants
+				'match': '\\b([_A-Z]+)\\b'
 				'name': 'variable.kickass'
 			}
+			# ===============================================================
 		]
