@@ -48,7 +48,7 @@ repository:
 				'captures':
 					1: 'name': 'keyword.control.directive.kickass'
 					2: 'name': 'keyword.control.directive.kickass'
-					3: 'name': 'constant.vaiable.kickass'
+					4: 'name': 'constant.vaiable.kickass'
 			}
 			{
 				'match': '(\\#)((import(once)?))([\\s\\w]+)'
